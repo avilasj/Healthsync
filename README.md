@@ -1,3 +1,2 @@
 Feito pelos alunos:
-Silvio José de Ávila Filho
-Natan Gonçalves Baldoino
+Silvio José de Ávila Filho e Natan Gonçalves Baldoino
