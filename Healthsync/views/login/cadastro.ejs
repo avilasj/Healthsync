@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Cadastro</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .cadastro-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            max-width: 800px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cadastro-form-section {
+            flex-grow: 1;
+            flex-shrink: 0;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .cadastro-image-section {
+            flex-basis: 300px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .cadastro-image-section img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .cadastro-header {
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cadastro-header .logo {
+            justify-content: center !important;
+            margin-bottom: 10px;
+        }
+
+        .cadastro-header h1 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .cadastro-form {
+            width: 100%;
+        }
+
+        .cadastro-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .cadastro-form .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            text-align: left;
+        }
+
+        .cadastro-form .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
+            background: white;
+        }
+
+        .cadastro-form .form-input:hover {
+            background: white;
+        }
+
+        .cadastro-button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
+        }
+
+        .cadastro-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 255, 204, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .cadastro-container {
+                padding: 30px;
+                gap: 30px;
+            }
+
+            .cadastro-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .cadastro-form .form-input {
+                padding: 10px 12px;
+                font-size: 0.95rem;
+            }
+
+            .cadastro-button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cadastro-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cadastro-container">
+        <div class="cadastro-form-section">
+            <div class="cadastro-header">
+                <div class="logo" style="justify-content: flex-start; margin-bottom: 10px;">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1>HealthSync</h1>
+                </div>
+                <h1>Crie sua conta HealthSync</h1>
+            </div>
+            
+            <form action="/cadastro" class="cadastro-form" id="cadastroForm" method="POST">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Nome" name="usunome" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Sobrenome" name="ususobrenome" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Email" name="usuemail" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Confirme o email" name="usuemail_confirm" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Senha" name="ususenha" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Confirme sua senha" name="ususenha_confirm" required minlength="6">
+                </div>
+                <button type="submit" class="cadastro-button">Cadastre-se</button>
+            </form>
+        </div>
+        <div class="cadastro-image-section">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+            const form = document.querySelector('form');
+            const password = document.getElementById('ususenha');
+            const confirmPassword = document.getElementById('confirmar_senha');
+            const email = document.getElementById('usuemail');
+
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                let errorMessage = '';
+
+                if (password.value.length < 6) {
+                    isValid = false;
+                    errorMessage += 'A senha deve ter pelo menos 6 caracteres.\n';
+                }
+
+                if (password.value !== confirmPassword.value) {
+                    isValid = false;
+                    errorMessage += 'As senhas não coincidem.\n';
+                }
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email.value)) {
+                    isValid = false;
+                    errorMessage += 'Por favor, insira um email válido.\n';
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert(errorMessage);
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

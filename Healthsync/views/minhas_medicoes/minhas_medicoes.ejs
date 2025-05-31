@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Minhas Medições</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-chart-bar"></i>
+            <h1>Minhas Medições</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li class="active"><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/minhas_medicoes" class="tab-button active">
+                        <i class="fas fa-chart-bar"></i>
+                        Meus Dados
+                    </a>
+                    <a href="/atualizar_medicoes" class="tab-button">
+                        <i class="fas fa-sync"></i>
+                        Atualizar
+                    </a>
+                    <a href="/cadastrar_medicoes" class="tab-button">
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastrar medições
+                    </a>
+                </div>
+            </div>
+
+            <div class="measurements-list">
+                <% if (medicoes && medicoes.length > 0) { %>
+                    <% medicoes.forEach(function(medicao) { %>
+                        <div class="measurement-card">
+                            <div class="measurement-header">
+                                <h3>Medição de <%= new Date(medicao.meddata).toLocaleDateString() %></h3>
+                            </div>
+                            <div class="measurement-body">
+                                <div class="measurement-row">
+                                    <div class="measurement-item">
+                                        <label>Nome:</label>
+                                        <span><%= medicao.mednome %></span>
+                                    </div>
+                                    <div class="measurement-item">
+                                        <label>Idade:</label>
+                                        <span><%= medicao.medidade %> anos</span>
+                                    </div>
+                                </div>
+                                <div class="measurement-row">
+                                    <div class="measurement-item">
+                                        <label>Altura:</label>
+                                        <span><%= medicao.medaltura %>m</span>
+                                    </div>
+                                    <div class="measurement-item">
+                                        <label>Peso:</label>
+                                        <span><%= medicao.medpeso %>kg</span>
+                                    </div>
+                                </div>
+                                <div class="measurement-row">
+                                    <div class="measurement-item">
+                                        <label>Gordura Corporal:</label>
+                                        <span><%= medicao.medgordura %>%</span>
+                                    </div>
+                                    <div class="measurement-item">
+                                        <label>Massa Muscular:</label>
+                                        <span><%= medicao.medmassa %>%</span>
+                                    </div>
+                                </div>
+                                <div class="measurement-row">
+                                    <div class="measurement-item">
+                                        <label>Frequência Cardíaca:</label>
+                                        <span><%= medicao.medfrequencia %> bpm</span>
+                                    </div>
+                                    <div class="measurement-item">
+                                        <label>Pressão Arterial:</label>
+                                        <span><%= medicao.medpressao %></span>
+                                    </div>
+                                </div>
+                                <div class="measurement-row">
+                                    <div class="measurement-item">
+                                        <label>IMC:</label>
+                                        <span><%= medicao.medimc %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-measurements">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Nenhuma medição cadastrada ainda.</p>
+                        <a href="/cadastrar_medicoes" class="add-measurement-btn">
+                            <i class="fas fa-plus"></i>
+                            Cadastrar Primeira Medição
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

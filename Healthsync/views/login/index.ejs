@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Sync - Login</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <img src="/images/logo.png" alt="Logo Health Sync" class="logo">
+            <h1>Bem vindo</h1>
+            <p class="subtitle">Primeira vez em nosso app? Faça o cadastro clicando no botão "Cadastre-se".</p>
+            <a href="/cadastro" class="cadastro-btn">Cadastre-se</a>
+        </div>
+        <div class="right-side">
+            <div class="login-container">
+                <h2>Acesse sua conta Health Sync utilizando email e senha.</h2>
+                <form action="/login" class="space-y-6" method="post">
+                    <div class="input-group">
+                        <label for="email">Email:</label>
+                        <input name="email" type="email" id="email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="senha">Senha:</label>
+                        <input name="senha" type="password" id="senha" required>
+                    </div>
+                    <button type="submit" class="entrar-btn">Entrar</button>
+                </form>
+            </div>
+            <img src="/images/enfermeiro.png" alt="Enfermeiro" class="enfermeiro">
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Registrar Medicamento</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-pills"></i>
+            <h1>Lembrete de Medicamentos</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li class="active"><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registrar_medicamento" class="tab-button active">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar medicamento
+                    </a>
+                    <a href="/meus_medicamentos" class="tab-button">
+                        <i class="fas fa-list"></i>
+                        Meus medicamentos
+                    </a>
+                    <a href="/adicionar_lembretes" class="tab-button">
+                        <i class="fas fa-bell"></i>
+                        Adicionar lembretes
+                    </a>
+                    <a href="/meus_lembretes" class="tab-button">
+                        <i class="fas fa-clock"></i>
+                        Meus lembretes
+                    </a>
+                </div>
+            </div>
+
+            <div class="measurements-card">
+                <div class="measurements-form">
+                    <div class="form-container">
+                        <form action="/registrar_medicamento" method="POST" class="medication-form">
+                            <div class="form-group">
+                                <label for="medicamento_nome">Nome do Medicamento:</label>
+                                <input type="text" id="medicamento_nome" name="medicamento_nome" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="medicamento_dosagem">Dosagem:</label>
+                                <input type="text" id="medicamento_dosagem" name="medicamento_dosagem" required placeholder="Ex: 1 comprimido, 5ml">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="medicamento_frequencia">Frequência:</label>
+                                <select id="medicamento_frequencia" name="medicamento_frequencia" required>
+                                    <option value="">Selecione a frequência</option>
+                                    <option value="diario">Diário</option>
+                                    <option value="12h">A cada 12 horas</option>
+                                    <option value="8h">A cada 8 horas</option>
+                                    <option value="6h">A cada 6 horas</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="medicamento_horario">Horário:</label>
+                                <input type="time" id="medicamento_horario" name="medicamento_horario" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="medicamento_observacoes">Observações:</label>
+                                <textarea id="medicamento_observacoes" name="medicamento_observacoes" rows="3" placeholder="Ex: Tomar após as refeições"></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="edit-button">Registrar Medicamento</button>
+                                <a href="/meus_medicamentos" class="edit-button">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

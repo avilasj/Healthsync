@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Meus Medicamentos</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-pills"></i>
+            <h1>Meus Medicamentos</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li class="active"><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registrar_medicamento" class="tab-button">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar medicamento
+                    </a>
+                    <a href="/meus_medicamentos" class="tab-button active">
+                        <i class="fas fa-list"></i>
+                        Meus medicamentos
+                    </a>
+                    <a href="/adicionar_lembretes" class="tab-button">
+                        <i class="fas fa-bell"></i>
+                        Adicionar lembretes
+                    </a>
+                    <a href="/meus_lembretes" class="tab-button">
+                        <i class="fas fa-clock"></i>
+                        Meus lembretes
+                    </a>
+                </div>
+            </div>
+
+            <div class="medications-container">
+                <div class="medications-header">
+                    <h2>Meus Medicamentos</h2>
+                    <a href="/registrar_medicamento" class="btn-primary">
+                        <i class="fas fa-plus"></i> Novo Medicamento
+                    </a>
+                </div>
+
+                <div class="medications-list">
+                    <% if (medicamentos && medicamentos.length > 0) { %>
+                        <% medicamentos.forEach(function(medicamento) { %>
+                            <div class="medication-card">
+                                <div class="medication-info">
+                                    <h3><%= medicamento.medicamento_nome %></h3>
+                                    <p class="dosage"><strong>Dosagem:</strong> <%= medicamento.medicamento_dosagem %></p>
+                                    <p class="frequency"><strong>Frequência:</strong> <%= medicamento.medicamento_frequencia %></p>
+                                    <p class="time"><strong>Horário:</strong> <%= medicamento.medicamento_horario %></p>
+                                    <% if (medicamento.medicamento_observacoes) { %>
+                                        <p class="notes"><strong>Observações:</strong> <%= medicamento.medicamento_observacoes %></p>
+                                    <% } %>
+                                </div>
+                                <div class="medication-actions">
+                                    <button class="btn-edit" data-id="<%= medicamento.medicamento_codigo %>">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-delete" data-id="<%= medicamento.medicamento_codigo %>">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="no-medications">
+                            <p>Você ainda não tem medicamentos registrados.</p>
+                            <a href="/registrar_medicamento" class="btn-primary">Registrar Primeiro Medicamento</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+
+            const medicationsList = document.querySelector('.medications-list');
+
+            if (medicationsList) {
+                medicationsList.addEventListener('click', function(event) {
+                    const target = event.target.closest('button');
+
+                    if (target) {
+                        const medicationId = target.dataset.id;
+
+                        if (target.classList.contains('btn-edit')) {
+                            editarMedicamentoAction(medicationId);
+                        } else if (target.classList.contains('btn-delete')) {
+                            if (confirm('Tem certeza que deseja excluir este medicamento?')) {
+                                excluirMedicamentoAction(medicationId);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        function editarMedicamentoAction(medcodigo) {
+            console.log('Editar medicamento:', medcodigo);
+        }
+
+        function excluirMedicamentoAction(medcodigo) {
+            console.log('Excluir medicamento:', medcodigo);
+            fetch('/excluir_medicamento', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ medicamento_codigo: medcodigo }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Erro ao excluir medicamento.');
+                    console.error('Falha na exclusão do medicamento');
+                }
+            })
+            .catch((error) => {
+                console.error('Erro na requisição de exclusão:', error);
+                alert('Erro na comunicação com o servidor ao excluir medicamento.');
+            });
+        }
+    </script>
+</body>
+</html> 

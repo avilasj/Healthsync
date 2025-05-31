@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Histórico de Registros</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: 400px;
+        }
+
+        .chart-card h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .chart-card canvas {
+            width: 100% !important;
+            height: calc(100% - 40px) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-history"></i>
+            <h1>Histórico de Registros</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li class="active"><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registro_pressao" class="tab-button">
+                        <i class="fas fa-heartbeat"></i>
+                        Registro de pressão
+                    </a>
+                    <a href="/registro_glicemia" class="tab-button">
+                        <i class="fas fa-tint"></i>
+                        Registro glicêmico
+                    </a>
+                    <a href="/historico_registros" class="tab-button active">
+                        <i class="fas fa-history"></i>
+                        Histórico de registros
+                    </a>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Pressão Arterial</h3>
+                    <canvas id="pressaoChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Glicemia</h3>
+                    <canvas id="glicemiaChart"></canvas>
+                </div>
+            </div>
+
+            <div class="data-tables">
+                <div class="table-card">
+                    <h3>Registros de Pressão</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Pressão</th>
+                                <th>Frequência</th>
+                                <th>Peso</th>
+                                <th>Estresse</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% registrosPressao.forEach(function(registro) { %>
+                                <tr>
+                                    <td><%= new Date(registro.data_registro).toLocaleString() %></td>
+                                    <td><%= registro.pressao %></td>
+                                    <td><%= registro.frequencia %></td>
+                                    <td><%= registro.peso %></td>
+                                    <td><%= registro.estresse %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-card">
+                    <h3>Registros de Glicemia</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Glicemia</th>
+                                <th>Momento</th>
+                                <th>Alimentação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% registrosGlicemia.forEach(function(registro) { %>
+                                <tr>
+                                    <td><%= new Date(registro.data_registro).toLocaleString() %></td>
+                                    <td><%= registro.glicemia %></td>
+                                    <td><%= registro.momento %></td>
+                                    <td><%= registro.alimentacao %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let pressaoChart = null;
+        let glicemiaChart = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+            
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+
+            if (pressaoChart) {
+                pressaoChart.destroy();
+            }
+            if (glicemiaChart) {
+                glicemiaChart.destroy();
+            }
+
+            const pressaoCtx = document.getElementById('pressaoChart').getContext('2d');
+            const glicemiaCtx = document.getElementById('glicemiaChart').getContext('2d');
+
+            const pressaoData = {
+                labels: <%- JSON.stringify(registrosPressao.map(r => new Date(r.data_registro).toLocaleDateString())) %>,
+                sistolica: <%- JSON.stringify(registrosPressao.map(r => {
+                    const partes = r.pressao.split('/');
+                    return partes[0] ? parseInt(partes[0]) : null;
+                })) %>,
+                diastolica: <%- JSON.stringify(registrosPressao.map(r => {
+                    const partes = r.pressao.split('/');
+                    return partes[1] ? parseInt(partes[1]) : null;
+                })) %>
+            };
+
+            const glicemiaData = {
+                labels: <%- JSON.stringify(registrosGlicemia.map(r => new Date(r.data_registro).toLocaleDateString())) %>,
+                valores: <%- JSON.stringify(registrosGlicemia.map(r => parseInt(r.glicemia))) %>
+            };
+
+            pressaoChart = new Chart(pressaoCtx, {
+                type: 'line',
+                data: {
+                    labels: pressaoData.labels,
+                    datasets: [{
+                        label: 'Pressão Sistólica',
+                        data: pressaoData.sistolica,
+                        borderColor: '#FF6B6B',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Pressão Diastólica',
+                        data: pressaoData.diastolica,
+                        borderColor: '#4ECDC4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 140,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+
+            glicemiaChart = new Chart(glicemiaCtx, {
+                type: 'bar',
+                data: {
+                    labels: glicemiaData.labels,
+                    datasets: [{
+                        label: 'Glicemia',
+                        data: glicemiaData.valores,
+                        backgroundColor: 'rgba(78, 205, 196, 0.8)',
+                        borderColor: '#4ECDC4',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Meus Lembretes</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-pills"></i>
+            <h1>Lembrete de Medicamentos</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li class="active"><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registrar_medicamento" class="tab-button">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar medicamento
+                    </a>
+                    <a href="/meus_medicamentos" class="tab-button">
+                        <i class="fas fa-list"></i>
+                        Meus medicamentos
+                    </a>
+                    <a href="/adicionar_lembretes" class="tab-button">
+                        <i class="fas fa-bell"></i>
+                        Adicionar lembretes
+                    </a>
+                    <a href="/meus_lembretes" class="tab-button active">
+                        <i class="fas fa-clock"></i>
+                        Meus lembretes
+                    </a>
+                </div>
+            </div>
+
+            <div class="reminders-container">
+                <div class="reminders-header">
+                    <h2>Meus Lembretes</h2>
+                    <a href="/adicionar_lembretes" class="btn-primary">
+                        <i class="fas fa-plus"></i> Novo Lembrete
+                    </a>
+                </div>
+
+                <div class="reminders-list">
+                    <% if (lembretes && lembretes.length > 0) { %>
+                        <% lembretes.forEach(function(lembrete) { %>
+                            <div class="reminder-card">
+                                <div class="reminder-info">
+                                    <h3><%= lembrete.medicamento_nome %></h3>
+                                    <p class="time"><strong>Horário:</strong> <%= lembrete.lembrete_horario %></p>
+                                    <p class="frequency"><strong>Frequência:</strong> <%= lembrete.lembrete_frequencia %></p>
+                                    <% if (lembrete.lembrete_observacoes) { %>
+                                        <p class="notes"><strong>Observações:</strong> <%= lembrete.lembrete_observacoes %></p>
+                                    <% } %>
+                                </div>
+                                <div class="reminder-actions">
+                                    <button class="btn-edit" data-id="<%= lembrete.lembrete_codigo %>">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn-delete" data-id="<%= lembrete.lembrete_codigo %>">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="no-reminders">
+                            <p>Você ainda não tem lembretes registrados.</p>
+                            <a href="/adicionar_lembretes" class="btn-primary">Adicionar Primeiro Lembrete</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+
+            const remindersList = document.querySelector('.reminders-list');
+
+            if (remindersList) {
+                remindersList.addEventListener('click', function(event) {
+                    const target = event.target.closest('button');
+
+                    if (target) {
+                        const reminderId = target.dataset.id;
+
+                        if (target.classList.contains('btn-edit')) {
+                            editarLembreteAction(reminderId);
+                        } else if (target.classList.contains('btn-delete')) {
+                            if (confirm('Tem certeza que deseja excluir este lembrete?')) {
+                                excluirLembreteAction(reminderId);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        function editarLembreteAction(lemcodigo) {
+            console.log('Editar lembrete:', lemcodigo);
+        }
+
+        function excluirLembreteAction(lemcodigo) {
+            console.log('Excluir lembrete:', lemcodigo);
+            fetch('/excluir_lembrete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ lembrete_codigo: lemcodigo }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Erro ao excluir lembrete.');
+                    console.error('Falha na exclusão do lembrete');
+                }
+            })
+            .catch((error) => {
+                console.error('Erro na requisição de exclusão:', error);
+                alert('Erro na comunicação com o servidor ao excluir lembrete.');
+            });
+        }
+    </script>
+</body>
+</html> 

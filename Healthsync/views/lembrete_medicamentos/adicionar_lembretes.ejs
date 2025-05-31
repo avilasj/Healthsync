@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Adicionar Lembretes</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-bell"></i>
+            <h1>Adicionar Lembretes</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li class="active"><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registrar_medicamento" class="tab-button">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar medicamento
+                    </a>
+                    <a href="/meus_medicamentos" class="tab-button">
+                        <i class="fas fa-list"></i>
+                        Meus medicamentos
+                    </a>
+                    <a href="/adicionar_lembretes" class="tab-button active">
+                        <i class="fas fa-bell"></i>
+                        Adicionar lembretes
+                    </a>
+                    <a href="/meus_lembretes" class="tab-button">
+                        <i class="fas fa-clock"></i>
+                        Meus lembretes
+                    </a>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-bell"></i> Configurar Lembrete</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-container">
+                        <form action="/adicionar_lembretes" method="POST" class="reminder-form">
+                            <div class="form-group">
+                                <label for="lembrete_medicamento">Medicamento:</label>
+                                <select id="lembrete_medicamento" name="lembrete_medicamento" required>
+                                    <option value="">Selecione um medicamento</option>
+                                    <% if (medicamentos && medicamentos.length > 0) { %>
+                                        <% medicamentos.forEach(function(medicamento) { %>
+                                            <option value="<%= medicamento.medicamento_codigo %>"><%= medicamento.medicamento_nome %></option>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lembrete_horario">Horário do Lembrete:</label>
+                                <input type="time" id="lembrete_horario" name="lembrete_horario" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lembrete_frequencia">Frequência:</label>
+                                <select id="lembrete_frequencia" name="lembrete_frequencia" required>
+                                    <option value="">Selecione a frequência</option>
+                                    <option value="diario">Diário</option>
+                                    <option value="12h">A cada 12 horas</option>
+                                    <option value="8h">A cada 8 horas</option>
+                                    <option value="6h">A cada 6 horas</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lembrete_observacoes">Observações:</label>
+                                <textarea id="lembrete_observacoes" name="lembrete_observacoes" rows="3" placeholder="Ex: Tomar 30 minutos antes das refeições"></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="edit-button">Adicionar Lembrete</button>
+                                <a href="/meus_lembretes" class="edit-button">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

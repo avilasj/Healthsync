@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Página não encontrada</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .error-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .error-number {
+            font-size: 8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .error-image {
+            width: 200px;
+            margin: 2rem 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .search-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: white;
+            color: #00ffcc;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid #00ffcc;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .search-button:hover {
+            background: #00ffcc;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <h1>Health Sync</h1>
+        </div>
+        <div class="menu-section">
+            <a href="/dashboard" class="menu-button">
+                <i class="fas fa-home"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="error-container">
+                <div class="error-content">
+                    <div class="error-number">404</div>
+                    <h1 class="error-title">Ops, a página não foi encontrada!</h1>
+                    <p class="error-message">
+                        Parece que você está tentando acessar uma página que não existe ou foi movida.
+                        Não se preocupe, nosso assistente virtual está aqui para ajudar!
+                    </p>
+                    <img src="paginaerro.png" alt="Assistente Virtual" class="error-image">
+                    <div class="error-actions">
+                        <a href="/dashboard" class="back-button">
+                            <i class="fas fa-home"></i>
+                            Voltar ao início
+                        </a>
+                        <button class="search-button" onclick="toggleAssistant()">
+                            <i class="fas fa-robot"></i>
+                            Pedir ajuda
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="assistant-container">
+            <div class="assistant-toggle">
+                <img src="/images/paginaerro.png" alt="Assistente Virtual">
+            </div>
+            <div class="assistant-card">
+                <div class="assistant-header">
+                    <h3><i class="fas fa-robot"></i> Assistente Virtual</h3>
+                    <button class="close-assistant"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="assistant-content">
+                    <div class="assistant-message">
+                        <p>Oi! Parece que você se perdeu. Como posso ajudar você a encontrar o que procura?</p>
+                    </div>
+                    <div class="assistant-actions">
+                        <button class="action-button">
+                            <i class="fas fa-search"></i>
+                            Buscar página
+                        </button>
+                        <button class="action-button">
+                            <i class="fas fa-map"></i>
+                            Ver mapa do site
+                        </button>
+                        <button class="action-button">
+                            <i class="fas fa-question-circle"></i>
+                            Ajuda
+                        </button>
+                        <button class="action-button">
+                            <i class="fas fa-home"></i>
+                            Página inicial
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const assistantToggle = document.querySelector('.assistant-toggle');
+            const assistantCard = document.querySelector('.assistant-card');
+            const closeAssistant = document.querySelector('.close-assistant');
+
+            function toggleAssistant() {
+                assistantCard.classList.toggle('active');
+            }
+
+            assistantToggle.addEventListener('click', toggleAssistant);
+            closeAssistant.addEventListener('click', () => {
+                assistantCard.classList.remove('active');
+            });
+
+            window.toggleAssistant = toggleAssistant;
+        });
+    </script>
+</body>
+</html> 

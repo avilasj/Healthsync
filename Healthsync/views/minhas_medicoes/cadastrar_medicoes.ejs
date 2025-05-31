@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Cadastrar Medições</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-chart-bar"></i>
+            <h1>Cadastrar Medições</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li class="active"><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/minhas_medicoes" class="tab-button">
+                        <i class="fas fa-chart-bar"></i>
+                        Meus Dados
+                    </a>
+                    <a href="/atualizar_medicoes" class="tab-button">
+                        <i class="fas fa-sync"></i>
+                        Atualizar
+                    </a>
+                    <a href="/cadastrar_medicoes" class="tab-button active">
+                        <i class="fas fa-plus-circle"></i>
+                        Cadastrar medições
+                    </a>
+                </div>
+            </div>
+
+            <div class="measurements-card">
+                <form class="measurements-form" id="registerForm" action="/cadastrar_medicoes" method="POST">
+                    <div class="form-group">
+                        <label>Nome:</label>
+                        <input type="text" name="mednome" placeholder="Digite seu nome..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Idade:</label>
+                        <input type="number" name="medidade" placeholder="Digite sua idade..." min="0" max="150" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Altura (m):</label>
+                        <input type="number" name="medaltura" placeholder="Digite sua altura..." step="0.01" min="0" max="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Peso (Kg):</label>
+                        <input type="number" name="medpeso" placeholder="Digite seu peso..." step="0.1" min="0" max="500" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gordura corporal (%):</label>
+                        <input type="number" name="medgordura" placeholder="Digite sua % de gordura corporal..." step="0.1" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Massa muscular (%):</label>
+                        <input type="number" name="medmassa" placeholder="Digite sua % de massa muscular..." step="0.1" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Frequência cardíaca (bpm):</label>
+                        <input type="number" name="medfrequencia" placeholder="Digite sua frequência cardíaca..." min="0" max="250" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pressão arterial:</label>
+                        <input type="text" name="medpressao" placeholder="Ex: 120/80" required pattern="\d{2,3}\/\d{2,3}">
+                    </div>
+                    <div class="form-group">
+                        <label>IMC:</label>
+                        <input type="text" name="medimc" readonly placeholder="Calculado automaticamente">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="edit-button">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    const targetHref = this.dataset.href; 
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref; 
+                    }
+                });
+            });
+
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const pesoInput = document.querySelector('input[name="medpeso"]');
+            const alturaInput = document.querySelector('input[name="medaltura"]');
+            const imcInput = document.querySelector('input[name="medimc"]');
+
+            function calcularIMC() {
+                const peso = parseFloat(pesoInput.value);
+                const altura = parseFloat(alturaInput.value);
+                
+                if (peso && altura) {
+                    const imc = peso / (altura * altura);
+                    let classification;
+
+                    if (imc < 18.5) classification = "Abaixo do peso";
+                    else if (imc < 25) classification = "Peso normal";
+                    else if (imc < 30) classification = "Sobrepeso";
+                    else if (imc < 35) classification = "Obesidade Grau I";
+                    else if (imc < 40) classification = "Obesidade Grau II";
+                    else classification = "Obesidade Grau III";
+
+                    imcInput.value = classification;
+                }
+            }
+
+            pesoInput.addEventListener('input', calcularIMC);
+            alturaInput.addEventListener('input', calcularIMC);
+
+            const registerForm = document.getElementById('registerForm');
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const peso = parseFloat(pesoInput.value);
+                const altura = parseFloat(alturaInput.value);
+                
+                if (peso && altura) {
+                    const imc = peso / (altura * altura);
+                    let classification;
+
+                    if (imc < 18.5) classification = "Abaixo do peso";
+                    else if (imc < 25) classification = "Peso normal";
+                    else if (imc < 30) classification = "Sobrepeso";
+                    else if (imc < 35) classification = "Obesidade Grau I";
+                    else if (imc < 40) classification = "Obesidade Grau II";
+                    else classification = "Obesidade Grau III";
+
+                    imcInput.value = classification;
+                }
+                
+                this.submit();
+            });
+        });
+    </script>
+</body>
+</html> 

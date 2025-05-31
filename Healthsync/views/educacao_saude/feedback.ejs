@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Feedback</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .feedback-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .feedback-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feedback-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+            color: white;
+        }
+
+        .feedback-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-content {
+            padding: 2rem;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #ffd700;
+            transform: scale(1.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-input:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.2);
+            background: white;
+        }
+
+        .form-input:hover {
+            background: white;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
+        }
+
+        .feedback-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding-top: 30px;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            z-index: 2;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 9px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .progress-step:first-child::after {
+            left: 50%;
+            width: 50%;
+        }
+
+        .progress-step:last-child::after {
+            width: 50%;
+        }
+
+        .progress-step.active::before {
+            background: #00ffcc;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .progress-step.active::after {
+            background: #00ffcc;
+        }
+
+        .progress-step span {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .progress-step.active span {
+            color: #00ffcc;
+            font-weight: bold;
+        }
+
+        .feedback-success {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feedback-success i {
+            font-size: 4rem;
+            color: #00ffcc;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-success h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-success p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Menu Bar -->
+    <div class="top-menu">
+        <div class="menu-title">
+            <h1>Health Sync Feedback</h1>
+        </div>
+        <div class="menu-section">
+            <a href="/educacao_saude" class="menu-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="feedback-container animate-fade-in">
+                <div class="feedback-card">
+                    <div class="feedback-header">
+                        <h2>DEIXE O SEU FEEDBACK</h2>
+                        <p>Sua opinião é muito importante para continuarmos melhorando</p>
+                    </div>
+                    
+                    <div class="feedback-content">
+                        <div class="feedback-progress">
+                            <div class="progress-step active">
+                                <span>Avaliação</span>
+                            </div>
+                            <div class="progress-step">
+                                <span>Detalhes</span>
+                            </div>
+                            <div class="progress-step">
+                                <span>Envio</span>
+                            </div>
+                        </div>
+
+                        <form class="feedback-form" id="feedbackForm" action="/feedback" method="POST">
+                            <div class="rating-container">
+                                <div class="star-rating">
+                                    <input type="radio" id="star5" name="rating" value="5" required>
+                                    <label for="star5"><i class="fas fa-star"></i></label>
+                                    <input type="radio" id="star4" name="rating" value="4">
+                                    <label for="star4"><i class="fas fa-star"></i></label>
+                                    <input type="radio" id="star3" name="rating" value="3">
+                                    <label for="star3"><i class="fas fa-star"></i></label>
+                                    <input type="radio" id="star2" name="rating" value="2">
+                                    <label for="star2"><i class="fas fa-star"></i></label>
+                                    <input type="radio" id="star1" name="rating" value="1">
+                                    <label for="star1"><i class="fas fa-star"></i></label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="comentario">Comentário:</label>
+                                <textarea id="comentario" name="comentario" class="form-input" rows="4" required></textarea>
+                            </div>
+
+                            <button type="submit" class="submit-button">Enviar Feedback</button>
+                        </form>
+
+                        <div class="feedback-success" id="feedbackSuccess">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Obrigado pelo seu feedback!</h3>
+                            <p>Sua opinião é muito importante para nós.</p>
+                            <a href="/educacao_saude" class="submit-button">Voltar para Educação e Saúde</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackForm = document.getElementById('feedbackForm');
+            const feedbackSuccess = document.getElementById('feedbackSuccess');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            let currentStep = 0;
+
+            
+            function updateProgress() {
+                progressSteps.forEach((step, index) => {
+                    if (index <= currentStep) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+            }
+
+            
+            const stars = document.querySelectorAll('.star-rating label');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    currentStep = 1;
+                    updateProgress();
+                });
+            });
+
+            
+            const formInputs = document.querySelectorAll('.form-input');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    if (currentStep < 1) {
+                        currentStep = 1;
+                        updateProgress();
+                    }
+                });
+            });
+
+            
+            const requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+            requiredInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    let allFilled = true;
+                    requiredInputs.forEach(req => {
+                        if (req.type === 'radio') {
+                            const radioGroup = document.querySelectorAll(`input[name="${req.name}"]`);
+                            if (![...radioGroup].some(radio => radio.checked)) {
+                                allFilled = false;
+                            }
+                        } else if (!req.value.trim()) {
+                            allFilled = false;
+                        }
+                    });
+                    if (allFilled && currentStep < 2) {
+                        currentStep = 2;
+                        updateProgress();
+                    }
+                });
+            });
+
+           
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+          
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+           
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

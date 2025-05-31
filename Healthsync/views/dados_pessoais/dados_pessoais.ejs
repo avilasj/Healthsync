@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Dados Pessoais</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-user"></i>
+            <h1>Dados Pessoais</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li class="active"><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="section-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user"></i> Meus Dados Pessoais</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-container">
+                        <form action="/dados_pessoais" method="POST" class="personal-data-form">
+                            <div class="form-group">
+                                <label for="usunome">Nome:</label>
+                                <input type="text" id="usunome" name="usunome" value="<%= usuario.usunome %>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ususobrenome">Sobrenome:</label>
+                                <input type="text" id="ususobrenome" name="ususobrenome" value="<%= usuario.ususobrenome %>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="usuemail">Email:</label>
+                                <input type="email" id="usuemail" name="usuemail" value="<%= usuario.usuemail %>" required>
+                            </div>
+
+                            <%# Adicionando campos para dados complementares %>
+                            <div class="form-group">
+                                <label for="idade">Idade:</label>
+                                <input type="number" id="idade" name="idade" value="<%= dadosComplementares ? dadosComplementares.idade : '' %>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefone">Telefone:</label>
+                                <input type="tel" id="telefone" name="telefone" value="<%= dadosComplementares ? dadosComplementares.telefone : '' %>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cidade">Cidade:</label>
+                                <input type="text" id="cidade" name="cidade" value="<%= dadosComplementares ? dadosComplementares.cidade : '' %>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estado">Estado:</label>
+                                <input type="text" id="estado" name="estado" value="<%= dadosComplementares ? dadosComplementares.estado : '' %>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endereco">Endereço:</label>
+                                <input type="text" id="endereco" name="endereco" value="<%= dadosComplementares ? dadosComplementares.endereco : '' %>">
+                            </div>
+
+                            <%# Nota: Campo de senha não incluído aqui por segurança. Atualização de senha deve ser separada. %>
+
+                            <div class="form-actions">
+                                <button type="submit" class="edit-button">Salvar Alterações</button>
+                                <a href="/dashboard" class="edit-button">Cancelar</a> <%# Ou redirecionar para outra página %>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

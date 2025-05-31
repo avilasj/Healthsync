@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Dashboard</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-chart-line"></i>
+            <h1>Dashboard</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Controle Glicêmico</h3>
+                    </div>
+                    <div class="summary-content">
+                        <canvas id="glicemiaChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Controle de Pressão</h3>
+                    </div>
+                    <div class="summary-content">
+                        <canvas id="pressaoChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock"></i> Horário de Medicações</h3>
+                    </div>
+                    <div class="summary-content">
+                        <ul class="medication-schedule-list">
+                            <% if (lembretes && lembretes.length > 0) { %>
+                                <% lembretes.forEach(function(lembrete) { %>
+                                    <li>
+                                        <div class="medication-time">
+                                            <%= lembrete.lembrete_horario %>
+                                        </div>
+                                        <div class="medication-info">
+                                            <h4><%= lembrete.medicamento_nome %></h4>
+                                            <p>Frequência: <%= lembrete.lembrete_frequencia %></p>
+                                            <% if (lembrete.lembrete_observacoes) { %>
+                                                <p>Observações: <%= lembrete.lembrete_observacoes %></p>
+                                            <% } %>
+                                        </div>
+                                    </li>
+                                <% }); %>
+                            <% } else { %>
+                                <li>
+                                    <p>Nenhum lembrete de medicação cadastrado.</p>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Educação e Saúde</h3>
+                    </div>
+                    <div class="tip-content">
+                        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500" alt="Alimentação Saudável" class="tip-image">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const pressaoCtx = document.getElementById('pressaoChart').getContext('2d');
+            new Chart(pressaoCtx, {
+                type: 'line',
+                data: {
+                    labels: <%- JSON.stringify(registrosPressao.map(r => new Date(r.data_registro).toLocaleString())) %>,
+                    datasets: [{
+                        label: 'Sistólica',
+                        data: <%- JSON.stringify(registrosPressao.map(r => parseInt(r.pressao.split('/')[0]))) %>,
+                        borderColor: '#FF6B6B',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#FF6B6B',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Diastólica',
+                        data: <%- JSON.stringify(registrosPressao.map(r => parseInt(r.pressao.split('/')[1]))) %>,
+                        borderColor: '#4ECDC4',
+                        backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#4ECDC4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: "'Poppins', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                family: "'Poppins', sans-serif"
+                            },
+                            bodyFont: {
+                                size: 13,
+                                family: "'Poppins', sans-serif"
+                            },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 140,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: "'Poppins', sans-serif"
+                                },
+                                padding: 10
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: "'Poppins', sans-serif"
+                                },
+                                maxRotation: 45,
+                                minRotation: 45,
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+
+            const glicemiaCtx = document.getElementById('glicemiaChart').getContext('2d');
+            new Chart(glicemiaCtx, {
+                type: 'bar',
+                data: {
+                    labels: <%- JSON.stringify(registrosGlicemia.map(r => new Date(r.data_registro).toLocaleString())) %>,
+                    datasets: [{
+                        label: 'Glicemia',
+                        data: <%- JSON.stringify(registrosGlicemia.map(r => r.glicemia)) %>,
+                        backgroundColor: 'rgba(78, 205, 196, 0.8)',
+                        borderColor: '#4ECDC4',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: "'Poppins', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                family: "'Poppins', sans-serif"
+                            },
+                            bodyFont: {
+                                size: 13,
+                                family: "'Poppins', sans-serif"
+                            },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 70,
+                            max: 180,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: "'Poppins', sans-serif"
+                                },
+                                padding: 10
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: "'Poppins', sans-serif"
+                                },
+                                maxRotation: 45,
+                                minRotation: 45,
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

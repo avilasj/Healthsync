@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Educação e Saúde</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-book-medical"></i>
+            <h1>Educação e Saúde</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li class="active"><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div id="feedbackSuccessMessage" class="success-message" style="display: none; padding: 15px; margin-bottom: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px;">
+                Feedback enviado com sucesso! Obrigado pela sua opinião.
+            </div>
+
+            <div class="education-grid">
+                <div class="education-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heart"></i> Aprenda a controlar sua pressão</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="video-container">
+                            <img src="pressao_arterial.jpg" alt="Medição de pressão" class="preview-image">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <p class="content-description">
+                            Aprenda técnicas e dicas importantes para manter sua pressão arterial controlada.
+                            Clique para assistir ao vídeo informativo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-utensils"></i> Sites parceiros com receitas saudáveis</h3>
+                    </div>
+                    <div class="card-content">
+                        <img src="receitas_saudaveis.jpg" alt="Receitas saudáveis" class="content-image">
+                        <p class="content-description">
+                            Descubra deliciosas receitas saudáveis que ajudam no controle da pressão e glicemia.
+                            <a href="#" class="link-button">Explorar receitas</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-tint"></i> Aprenda a controlar sua glicemia</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="video-container">
+                            <img src="glicemia.jpg" alt="Medição de glicemia" class="preview-image">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <p class="content-description">
+                            Dicas essenciais para manter seus níveis de glicose controlados.
+                            Clique para assistir ao vídeo explicativo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="education-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-comment"></i> Deixe seu feedback</h3>
+                    </div>
+                    <div class="card-content">
+                        <a href="/feedback" class="feedback-link">
+                            <img src="feedback.jpg" alt="Feedback" class="content-image">
+                            <p class="content-description">
+                                Sua opinião é muito importante para nós! Clique aqui para avaliar nosso serviço.
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.video-container').forEach(container => {
+                container.addEventListener('click', function() {
+                    alert('Iniciando vídeo...');
+                });
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const feedbackSuccess = urlParams.get('success');
+            const successMessageDiv = document.getElementById('feedbackSuccessMessage');
+
+            if (feedbackSuccess && successMessageDiv) {
+                successMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    successMessageDiv.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html> 

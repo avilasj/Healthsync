@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Registro de Pressão</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Menu Bar -->
+    <div class="top-menu">
+        <div class="menu-title">
+            <i class="fas fa-calendar-day"></i>
+            <h1>Registro de Pressão</h1>
+        </div>
+        <div class="user-menu">
+            <button class="user-menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span><%= usuNome %></span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a>
+                <a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>HealthSync</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="/minhas_medicoes"><i class="fas fa-clipboard-list"></i> Minhas Medições</a></li>
+                    <li class="active"><a href="/registro_pressao"><i class="fas fa-calendar-day"></i> Registro Diário</a></li>
+                    <li><a href="/registrar_medicamento"><i class="fas fa-pills"></i> Lembrete de Medicamentos</a></li>
+                    <li><a href="/educacao_saude"><i class="fas fa-book-medical"></i> Educação e Saúde</a></li>
+                    <li><a href="/dados_pessoais"><i class="fas fa-user"></i> Dados Pessoais</a></li>
+                    <li><a href="#" class="logout-link" data-href="/"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navigation Tabs -->
+            <div class="content-header">
+                <div class="tab-navigation">
+                    <a href="/registro_pressao" class="tab-button active">
+                        <i class="fas fa-heartbeat"></i>
+                        Registro de pressão
+                    </a>
+                    <a href="/registro_glicemia" class="tab-button">
+                        <i class="fas fa-tint"></i>
+                        Registro glicêmico
+                    </a>
+                    <a href="/historico_registros" class="tab-button">
+                        <i class="fas fa-history"></i>
+                        Histórico de registros
+                    </a>
+                </div>
+            </div>
+
+            <div class="measurements-card">
+                <form class="measurements-form" id="pressaoForm" action="/registro_pressao" method="POST">
+                    <div class="form-group">
+                        <label>Pressão arterial</label>
+                        <input type="text" name="pressao" class="form-input" placeholder="Ex: 120/80" pattern="\d{2,3}\/\d{2,3}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Frequência cardíaca</label>
+                        <input type="number" name="frequencia" class="form-input" placeholder="BPM" min="40" max="200" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Peso corporal</label>
+                        <input type="number" name="peso" class="form-input" placeholder="kg" step="0.1" min="0" max="500">
+                    </div>
+                    <div class="form-group">
+                        <label>Nível de estresse</label>
+                        <select name="estresse" class="form-input" required>
+                            <option value="">Selecione...</option>
+                            <option value="baixo">Baixo</option>
+                            <option value="moderado">Moderado</option>
+                            <option value="alto">Alto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingestão de sal</label>
+                        <select name="sal" class="form-input">
+                            <option value="">Selecione...</option>
+                            <option value="baixa">Baixa</option>
+                            <option value="moderada">Moderada</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingestão de líquidos</label>
+                        <input type="number" name="liquidos" class="form-input" placeholder="ml" step="100">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="edit-button">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User Menu Dropdown
+            const userMenuBtn = document.querySelector('.user-menu-btn');
+            const userMenu = document.querySelector('.user-menu');
+            
+            userMenuBtn.addEventListener('click', () => {
+                userMenu.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target)) {
+                    userMenu.classList.remove('active');
+                }
+            });
+
+            // Adicionar confirmação para o botão Sair
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetHref = this.dataset.href;
+                    if (confirm('Tem certeza que deseja sair?')) {
+                        window.location.href = targetHref;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

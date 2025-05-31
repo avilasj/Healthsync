@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    height: 600px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.left-side {
+    width: 40%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #f8f8f8;
+}
+
+.logo {
+    width: 120px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.cadastro-btn {
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+    border: none;
+    color: white;
+    border-radius: 25px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 204, 204, 0.3);
+}
+
+.cadastro-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 204, 204, 0.4);
+    background: linear-gradient(135deg, #33cccc 0%, #00ffcc 100%);
+}
+
+.right-side {
+    width: 60%;
+    padding: 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+h2 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #00ffcc;
+}
+
+.entrar-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #00ffcc 0%, #33cccc 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.entrar-btn:hover {
+    background: #00cccc;
+}
+
+.enfermeiro {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 250px;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .left-side, .right-side {
+        width: 100%;
+    }
+
+    .enfermeiro {
+        display: none;
+    }
+} 
