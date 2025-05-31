@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Sync - Dashboard</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="brand">Health Sync</div>
+        <div class="dashboard-title">Dashboard</div>
+    </div>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/images/logo.png" alt="HealthSync Logo">
+                <span>HEALTHSYNC</span>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="/admin/admindashboard">Dashboard</a></li>
+                    <li><a href="/admin/usuarios">Gerenciador de usuários</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-bottom">
+                <a href="/admin" class="logout-link">Sair</a>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="dashboard-panel">
+                <div class="dashboard-info-list">
+                    <div class="dashboard-info-item">Total de Usuários Cadastrados: <%= totalCadastrados %></div>
+                    <div class="dashboard-info-item">Total de Usuários Inativos: <%= totalInativos %></div>
+                    <div class="dashboard-info-item">Última atualização do Sistema: xx/xx/xxxx</div>
+                    <div class="dashboard-info-item">Último backup: 7 dias atrás. Pendente</div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 

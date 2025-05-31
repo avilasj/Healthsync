@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSync - Cadastro Concluído</title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+            color: var(--text-dark);
+        }
+
+        .agradecimento-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .agradecimento-container i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .agradecimento-container h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .agradecimento-container p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .back-to-login-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3);
+        }
+
+        .back-to-login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 255, 204, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .agradecimento-container {
+                padding: 20px;
+            }
+
+            .agradecimento-container i {
+                font-size: 3rem;
+            }
+
+            .agradecimento-container h1 {
+                font-size: 1.5rem;
+            }
+
+            .agradecimento-container p {
+                font-size: 1rem;
+            }
+
+            .back-to-login-button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="agradecimento-container">
+        <i class="fas fa-check-circle"></i>
+        <h1>Cadastro Concluído!</h1>
+        <p>Obrigado por se cadastrar no HealthSync. Agora você pode acessar sua conta e começar a cuidar da sua saúde!</p>
+        <a href="/" class="back-to-login-button">Ir para o Login</a>
+    </div>
+</body>
+</html> 
